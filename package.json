@@ -1,0 +1,24 @@
+{
+  "author": "Ruben LZ Tan <soggie@gmail.com> (http://roguejs.com)",
+  "name": "norris-ioc",
+  "description": "An Inversion-of-Control container for the NORRIS project but can be used by anybody else",
+  "version": "0.0.1",
+  "homepage": "http://norris-cli.roguejs.com",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/soggie/norris-ioc.git"
+  },
+  "main": "lib/ioc.js",
+  "scripts": {
+    "test": "vows test/*"
+  },
+  "engines": {
+    "node": ">=0.4.8"
+  },
+  "dependencies": {
+    "npm" : ">=1.0.0"
+  },
+  "devDependencies": {
+    "vows" : ">=0.5.0"
+  }
+}

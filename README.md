@@ -11,7 +11,8 @@ The core usage of the NORRIS IoC is to, well, allow NORRIS namespace modules to 
 ### Baic Usage
 
 ````javascript
-var ioc = require('norris-ioc');
+// You need to call make() to create a new instance of IoC
+var ioc = require('norris-ioc').make();
 
 var deps = {
     express : '[npm] express',
