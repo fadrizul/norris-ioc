@@ -60,6 +60,10 @@ promise.on('success', function success(loaded) {
     var path = loaded.path;
     assert.isFunction(path['exists']);
 });
+
+promise.on('error', function error(err) {
+    console.log(err.stack);
+})
 ````
 
 The above will cause norris-ioc to load `express` and `socket.io` from the node_modules folder, and `fs` and `path` from node's core library.
@@ -126,6 +130,10 @@ promise.on('success', function(loaded) {
     var installer = loaded.installer;
     assert.isFunction(installer['install']);
 });
+
+promise.on('error', function(err) {
+    console.log(err.stack);
+})
 ````
 
 ### Replacing signatures
