@@ -105,3 +105,56 @@ function loadNorris(promise, module, callback) {
 ioc.attach('norris', loadNorris);
 ````
 
+Once you do that, you can use the signature `[norris]` anywhere in your code to load the right modules, your way. **NOTE**: Don't forget to support both promise and callback styles in your loading function.
+
+````javascript
+var deps = {
+    installer : '[norris] installer'
+}
+
+ioc.load(deps, function(err, loaded) {
+    if (!err) {
+        // Make sure the installer is loaded
+        var installer = loaded.installer;
+        assert.isFunction(installer['install']);
+    }
+});
+
+var promise = ioc.load(deps);
+promise.on('success', function(loaded) {
+    // Make sure the installer is loaded
+    var installer = loaded.installer;
+    assert.isFunction(installer['install']);
+});
+````
+
+### Replacing signatures
+
+The true purpose of IoC containers isn't just to streamline your project's dependency graph. It is also heavily useful during unit tests when you need to replace existing modules with mock ones.
+
+To achieve this, you will need to replace the current signatures with your own. This is extremely simple. Just define your own loaders and attach them to existing signatures:
+
+````javascript
+var deps = {
+    express : '[npm] express',
+    io      : '[npm] socket.io',
+    fs      : '[node] fs',
+    path    : '[node] path'
+}
+
+ioc.attach('npm', myNpmMocks)
+   .attach('node', myNodeMocks); 
+
+// Load it
+ioc.load(deps);
+````
+
+## License
+
+Copyright (c) 2011 Ruben L Z Tan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ 
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISINGFROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
