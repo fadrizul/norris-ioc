@@ -1,6 +1,7 @@
 {
   "author": "Ruben LZ Tan <soggie@gmail.com> (http://roguejs.com)",
   "name": "norris-ioc",
+  "tags": ["ioc", "dependency", "dependency injection", "norris"],
   "description": "An Inversion-of-Control container for the NORRIS project but can be used by anybody else",
   "version": "0.0.1",
   "homepage": "http://norris-cli.roguejs.com",
