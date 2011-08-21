@@ -11,7 +11,7 @@
   },
   "main": "lib/ioc.js",
   "scripts": {
-    "test": "vows test/*"
+    "test": "vows test/ioc.js --spec"
   },
   "engines": {
     "node": ">=0.4.8"
