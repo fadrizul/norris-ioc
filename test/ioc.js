@@ -1,5 +1,6 @@
 var fs      = require('fs');
 var path    = require('path');
+var wrench  = require('wrench');
 var vows    = require('vows');
 var assert  = require('assert');
 var Emitter = require('events').EventEmitter;
@@ -82,42 +83,39 @@ suite.addBatch({
     }
 });
 
-// Function to check whether an npm module has been successfully installed
-function hasModule(err, data, callback) {
-    
-}
+var norrisMockDir = __dirname + '/fixture/node_modules/norris-ioc';
 
 // Test the loading of npm modules
 suite.addBatch({
     'GIVEN that we want to test if norris-ioc can load npm modules' : {
         topic : function topic() {
+            // Make sure to wipe out the fixture directory
+            try {
+                wrench.rmdirSyncRecursive(norrisMockDir);
+            } catch (err) {}
+
             return IoC.make(__dirname + '/fixture');
         },
 
-        'WHEN we load an existing module `npm-valid` using callback style' : {
+        'WHEN we load "norris-ioc" using callback style' : {
             topic : function topic(ioc) {
-                var self = this;
-
-                /*ioc.load({ valid : '[npm] npm-valid' }, function onLoad(err, data) {
-                    if (err) {
-                        self.callback(err);
-                        return;
-                    } else {
-                        // Check the file system to see if the folder is still there
-                        fs.readdir(__dirname + '/fixture/node_modules', function onReddir(err, files) {
-                            if (err) {
-                                self.callback(err);
-                            } else {
-                                
-                            }
-                        });
-                    }
-                });*/
-                return false;
+                ioc.load({ ioc : '[npm] norris-ioc' }, this.callback);
             },
 
-            'THEN the "npm-valid" module should not be installed (use back existing modules)' : function testValidNpm(err, data) {
-                
+            'THEN the "norris-ioc" module should be loaded successfully' : function testNpmLoad(err, loaded) {
+                var ioc = loaded.ioc;
+                assert.isObject(ioc);
+                assert.isFunction(ioc.make);
+                assert.isFunction(ioc.load);
+            },
+
+            'THEN the "norris-ioc" module should be in the fixture dir' : function testNorrisMockDir(err, loaded) {
+                // Check the directory
+                var files   = fs.readdirSync(norrisMockDir);
+                assert.isTrue(-1 !== files.indexOf('package.json'));
+
+                var meta    = JSON.parse(fs.readFileSync(norrisMockDir + '/package.json'));
+                assert.equal(meta.name, 'norris-ioc');
             }
         }
     }
