@@ -6,8 +6,8 @@ var assert  = require('assert');
 var Emitter = require('events').EventEmitter;
 var IoC     = require(__dirname + '/../lib/ioc');
 
-var suite = vows.describe('IoC test suite');
-
+var suite   = vows.describe('IoC test suite');
+/*
 // Test loading of node modules
 suite.addBatch({
     'GIVEN that we want to test if norris-ioc can load node modules' : {
@@ -47,9 +47,9 @@ suite.addBatch({
     'GIVEN that we want to test if we can replace the node signature' : {
         topic : function topic() {
             var ioc = IoC.make();
-            ioc.attach('node', function loadFsMock(module, callback) {
+            ioc.attach('node', function loadFsMock(key, module, callback) {
                 var nodeMod = { chuckNorris : true };
-                callback(null, nodeMod);
+                callback(null, key, nodeMod);
             });
             return ioc;
         },
@@ -82,6 +82,7 @@ suite.addBatch({
         }
     }
 });
+*/
 
 var norrisMockDir = __dirname + '/fixture/node_modules/norris-ioc';
 
@@ -99,7 +100,7 @@ suite.addBatch({
 
         'WHEN we load "norris-ioc" using callback style' : {
             topic : function topic(ioc) {
-                ioc.load({ ioc : '[npm] norris-ioc' }, this.callback);
+                ioc.load({ ioc : '[npm] norris-ioc', fs : '[node] fs' }, this.callback);
             },
 
             'THEN the "norris-ioc" module should be loaded successfully' : function testNpmLoad(err, loaded) {
