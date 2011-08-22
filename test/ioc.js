@@ -100,7 +100,7 @@ suite.addBatch({
 
         'WHEN we load "norris-ioc" using callback style' : {
             topic : function topic(ioc) {
-                ioc.load({ ioc : '[npm] norris-ioc', fs : '[node] fs' }, this.callback);
+                ioc.load({ ioc : '[npm] norris-ioc', events : '[node] events' }, this.callback);
             },
 
             'THEN the "norris-ioc" module should be loaded successfully' : function testNpmLoad(err, loaded) {

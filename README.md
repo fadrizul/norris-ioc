@@ -93,7 +93,7 @@ The `npm` signature will automatically install an npm module straight from the n
 You can add your own signatures to the IoC container. Doing this is simple - just provide a signature keyword along with a callback:
 
 ````javascript
-function loadNorris(module, callback) {
+function loadNorris(key /* the key in the deps object */, module /* the module name */, callback) {
     try {
         var norrisMod = require('/norris/' + module);
         callback(null, norrisMod);
