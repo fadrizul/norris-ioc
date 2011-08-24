@@ -79,7 +79,7 @@ var deps = module.exports.deps = {
     npm : '[npm] npm'
 }
 
-ioc.make().load(deps, function onLoad(err, loaded) {
+ioc.load(deps, function onLoad(err, loaded) {
     console.log(loaded.fs);     // result should be the same as require('fs');
     console.log(loaded.npm);    // result should be the same as require('npm');
 });</code></pre>
