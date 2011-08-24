@@ -1,3 +1,4 @@
 node_modules/*
 .DS_Store
 ./test/fixture/node_modules/norris-ioc/*
+.monitor

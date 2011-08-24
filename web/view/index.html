@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<head>
+    <title>NORRIS IoC</title>
+    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap-1.1.0.min.css">
+    <link rel="stylesheet" href="http://yandex.st/highlightjs/6.0/styles/sunburst.min.css">
+    <link rel="stylesheet" href="/ioc.css">
+</head>
+<body>
+    <div class="topbar">
+        <div class="fill">
+            <div class="container">
+                <h3><a href="#intro">NORRIS-IOC</a></h3>
+                <ul>
+                    <li><a href="#ioc-overview">Overview</a></li>
+                    <li><a href="#installation">Installation</a></li>
+                    <li><a href="#basic-usage">Basic Usage</a></li>
+                    <li><a href="#signature-replacement">Signture Replacement</a></li>
+                    <li><a href="#references">References</a></li>
+                    <li><a href="#github">Github</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="content-container">
+        <a href="http://github.com/soggie/norris-ioc"><img style="position: fixed; top: 0; right: 0; border: 0; z-index: 999999" src="https://a248.e.akamai.net/assets.github.com/img/30f550e0d38ceb6ef5b81500c64d970b7fb0f028/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub"></a>
+        <div class="container">
+            <!-- Introduction section -->
+            <h1>NORRIS Inversion of Control Container</h1>
+            <blockquote class="intro">
+                Chuck Norris does not depend on anybody, but everybody depends on Chuck Norris
+            </blockquote>
+            
+            <!-- Overview section -->
+            <h2 id="ioc-overview">Overview</h2>
+            <hr>
+            <p>NORRIS IoC is an inversion-of-control container whose aim is to make it easy to define dependencies in your Node.JS application's modules. It is originally written for the NORRIS project, but it can be used as a general purpose container for any projects as long as they conform to certain design constraints.</p>
+            <p>What is Inversion-of-control? In your application, each individual module has a list of dependencies. They can look like this:</p>
+            <pre><code>var fs   = require('fs');
+var path = require('path');
+
+module.exports.run = function run() {
+    // Code here ...
+}</code></pre>
+            <p>In the above example, "fs" and "path" are dependencies towards two Node.JS core modules, which in turn is dependant on your computer's file system. If you have written your module in this manner, it will make unit testing difficult because then it'll be hard to control the unit testing environment.</p>
+            <p>To allow your unit test suite to "inject" a virtual file system as a fixture into your module would be difficult, if not impossible. The most sensible way of doing so would be to add a inject() function to your code to replace your current dependencies.</p>
+            <pre><code>var fs   = require('fs');
+var path = require('path');
+
+module.exports.run = function run() {
+    // Code here ...
+}
+
+module.exports.inject = function inject(deps) {
+    fs   = (undefined !== deps.fs)   ? deps.fs   : fs;
+    path = (undefined !== deps.path) ? deps.path : path;
+}</code></pre>
+            <p>The problem with this approach is that there're too much code to write for something so simple, not to mention that maintannance of your service locator/factory would soon snowball out of hand if you're not careful.</p>
+            <p>NORRIS IoC aims to solve this by providing a novel way of defining your dependencies.</p>
+
+            <!-- Installation section -->
+            <h2 id="installation">Installation</h2>
+            <hr>
+            <p>Installation is simple. If you have <a href="http://npmjs.org">NPM</a>, just type this in your working directory:</p>
+            <pre><code>$ npm install norris-ioc</code></pre>
+            <p>Once installation is complete, you can use NORRIS IoC anywhere in your project simply by requiring it:</p>
+            <pre><code>var ioc = require('norris-ioc').make(); // Don't forget the make() call!</code></pre>
+
+            <!-- Basic Usage -->
+            <h2 id="basic-usage">Basic Usage</h2>
+            <hr>
+            <p>NORRIS IoC is written to work asynchonously. There is no way to use it synchronously (will be added in the next version).</p>
+            <p>To use NORRIS IoC in your project, first you include the module, then you define a dependency definition, and the finally call the load() function:</p>
+            <pre><code>var ioc = require('norris-ioc').make();
+var deps = module.exports.deps {
+    fs  : '[node] fs',
+    npm : '[npm] npm'
+}
+
+ioc.make().load(deps, function onLoad(err, loaded) {
+    console.log(loaded.fs);     // result should be the same as require('fs');
+    console.log(loaded.npm);    // result should be the same as require('npm');
+});</code></pre>
+
+            <h3>Signatures</h3>
+            <p>"Signatures" are specialized functions in NORRIS IoC that is responsible for loading modules of a certain type. Currently, it only supports two signatures: "node" and "npm".</p>
+            <p>In the dependency definition object, the signature definition uses this syntax:</p>
+            <pre><code>var deps = module.exports.deps = { object_key : "[type] module_name" }</code></pre>
+            <p>Thus, if you want to load a node core module, simply type:
+            <pre><code>var deps = module.exports.deps = { events : "[node] events" }</code></pre>
+            <p>Which would be equivalent to:</p>
+            <pre><code>var events = require('events');</code></pre>
+
+            <h3>NPM Signatures</h3>
+            <p>NORRIS IoC comes supporting NPM module signatures as well. 
+        </div>
+    </div>
+        
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script src="/highlight.js"></script>
+    <script src="/ioc.js"></script>
+</body>
+</html>

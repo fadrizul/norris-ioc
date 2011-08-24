@@ -1,0 +1,32 @@
+.content-container, h2 {
+    padding-top     : 50px;
+}
+
+.intro {
+    border          : 1px dashed #ccc;
+    padding         : 10px;
+    font-size       : 1.2em;
+    text-align      : center;
+    font-family     : serif;
+    font-style      : italic;
+}
+
+pre {
+    background      : none;
+    border          : 0px solid #ccc;
+    padding         : 0;
+}
+
+code {
+    line-height     : 1.5em;
+}
+
+pre code {
+    padding         : 1em;
+}
+
+p {
+    font-size       : 1.3em;
+    line-height     : 1.5em;
+    margin-bottom   : 1em;
+}
