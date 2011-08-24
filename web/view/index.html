@@ -16,7 +16,7 @@
                     <li><a href="#ioc-overview">Overview</a></li>
                     <li><a href="#installation">Installation</a></li>
                     <li><a href="#basic-usage">Basic Usage</a></li>
-                    <li><a href="#signatures">Signtures</a></li>
+                    <li><a href="#signatures">Signatures</a></li>
                     <li><a href="#references">References</a></li>
                     <li><a href="#github">Github</a></li>
                     <li><a href="#license">License</a></li>
@@ -58,7 +58,7 @@ module.exports.inject = function inject(deps) {
     fs   = (undefined !== deps.fs)   ? deps.fs   : fs;
     path = (undefined !== deps.path) ? deps.path : path;
 }</code></pre>
-            <p>The problem with this approach is that there're too much code to write for something so simple, not to mention that maintannance of your service locator/factory would soon snowball out of hand if you're not careful.</p>
+            <p>The problem with this approach is that there're too much code to write for something so simple, not to mention that maintenance of your service locator/factory would soon snowball out of hand if you're not careful.</p>
             <p>NORRIS IoC aims to solve this by providing a novel way of defining your dependencies.</p>
 
             <!-- Installation section -->
@@ -110,7 +110,7 @@ ioc.load(deps, function onLoad(err, loaded) {
             <pre><code>var ioc = require('ioc').make();
 ioc.attach('norris', function loadNorris(key, module, callback) {
     try {
-        var norrisMod = requrie('./norris/' + module);
+        var norrisMod = require('./norris/' + module);
         callback(null, key, norrisMod);
     } catch (err) {
         callback(err);
