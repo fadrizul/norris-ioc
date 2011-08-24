@@ -74,7 +74,7 @@ module.exports.inject = function inject(deps) {
             <p>NORRIS IoC is written to work asynchonously. There is no way to use it synchronously (will be added in the next version).</p>
             <p>To use NORRIS IoC in your project, first you include the module, then you define a dependency definition, and the finally call the load() function:</p>
             <pre><code>var ioc = require('norris-ioc').make();
-var deps = module.exports.deps {
+var deps = module.exports.deps = {
     fs  : '[node] fs',
     npm : '[npm] npm'
 }
