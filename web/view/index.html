@@ -159,7 +159,7 @@ function mockNode(key, module, callback) {
         var mock_fs = {
             readdir : function() { console.log('mock readdir called'); }
         };
-        callback(null, key, module);
+        callback(null, key, mock_fs);
     } else {
         callback(new Error('Loading failed!'));
     }
