@@ -1,3 +1,7 @@
+h1, h2, h3, h4 {
+    font-family     : "Coustard", Georgia, serif;
+}
+
 .content-container, h2 {
     padding-top     : 50px;
 }
@@ -29,4 +33,16 @@ p {
     font-size       : 1.3em;
     line-height     : 1.5em;
     margin-bottom   : 1em;
+}
+
+.license {
+    border          : 1px solid #ccc;
+    padding         : 0.5em;
+}
+
+.footer {
+    background      : #ccc;
+    color           : #000;
+    padding         : 2em;
+    text-align      : center;
 }

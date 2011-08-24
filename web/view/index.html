@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>NORRIS IoC</title>
+    <link href='http://fonts.googleapis.com/css?family=Coustard' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap-1.1.0.min.css">
     <link rel="stylesheet" href="http://yandex.st/highlightjs/6.0/styles/sunburst.min.css">
     <link rel="stylesheet" href="/ioc.css">
@@ -15,9 +16,10 @@
                     <li><a href="#ioc-overview">Overview</a></li>
                     <li><a href="#installation">Installation</a></li>
                     <li><a href="#basic-usage">Basic Usage</a></li>
-                    <li><a href="#signature-replacement">Signture Replacement</a></li>
+                    <li><a href="#signatures">Signtures</a></li>
                     <li><a href="#references">References</a></li>
                     <li><a href="#github">Github</a></li>
+                    <li><a href="#license">License</a></li>
                 </ul>
             </div>
         </div>
@@ -82,19 +84,114 @@ ioc.make().load(deps, function onLoad(err, loaded) {
     console.log(loaded.npm);    // result should be the same as require('npm');
 });</code></pre>
 
-            <h3>Signatures</h3>
+            <!-- Signatures -->
+            <h2 id="signatures">Signatures</h2>
+            <hr>
             <p>"Signatures" are specialized functions in NORRIS IoC that is responsible for loading modules of a certain type. Currently, it only supports two signatures: "node" and "npm".</p>
             <p>In the dependency definition object, the signature definition uses this syntax:</p>
-            <pre><code>var deps = module.exports.deps = { object_key : "[type] module_name" }</code></pre>
+            <pre><code>var deps = { object_key : "[type] module_name" }</code></pre>
             <p>Thus, if you want to load a node core module, simply type:
-            <pre><code>var deps = module.exports.deps = { events : "[node] events" }</code></pre>
+            <pre><code>var deps = { events : "[node] events" }</code></pre>
             <p>Which would be equivalent to:</p>
             <pre><code>var events = require('events');</code></pre>
 
             <h3>NPM Signatures</h3>
-            <p>NORRIS IoC comes supporting NPM module signatures as well. 
+            <p>NORRIS IoC comes supporting npm module signatures as well. Unlike node core modules however, NORRIS IoC will automatically install the npm module for you if it doesn't exists, eliminating the need to manually define a package.json file and then remembering to run "npm install" everytime you clone your project form your repository.</p>
+            <pre><code>var deps = { module_key : "[npm] module_name" }</code></pre>
+            <p>Which is equivalent to:</p>
+            <pre><code>$ npm install module_name</code></pre>
+            <pre><code>var module_key = require('module_name');</code></pre>
+            <p>Two birds with one stone. :)</p>
+
+            <h3>Adding/Overriding Signatures</h3>
+            <p>The true purpose of signatures however, is to allow you to replace dependant modules with your own, which is a very common case in unit testing where you would want to replace concrete modules with mocks.</p>
+            <p>Doing this with NORRIS-IoC is extremely simple. Just call attach() before load():</p>
+            <pre><code>var ioc = require('ioc').make();
+ioc.attach('norris', function loadNorris(key, module, callback) {
+    try {
+        var norrisMod = requrie('./norris/' + module);
+        callback(null, key, norrisMod);
+    } catch (err) {
+        callback(err);
+    }
+});</code></pre>
+            <p>This will allow you to use the "norris" signature by doing this:</p>
+            <pre><code>var deps = { roundhouse : "[norris] kick" }</code></pre>
+            <p>Which would be equivalent to:</p>
+            <pre><code>var roundhouse = require('./norris/kick');</code></pre>
+
+            <!-- References -->
+            <h2 id="references">References</h2>
+            <hr>
+            <p>Installation:</p>
+            <pre><code>$ npm install norris-ioc</code></pre>
+            <p>Importing the ioc container:</p>
+            <pre><code>var ioc = require('ioc').make();</code></pre>
+            <p>Loading a node module using the callback style:</p>
+            <pre><code>var ioc = require('ioc').make();
+var deps = {
+    file_system : "[node] fs"
+}
+
+ioc.load(deps, function onLoad(err, loaded) {
+    console.log(loaded.file_system);
+});</pre></code>
+            <p>Loading a node module using the promise style:</p>
+            <pre><code>ioc = require('ioc').make();
+var deps = {
+    file_system : "[node] fs"
+}
+
+var promise = ioc.load(deps);
+
+promise.on('success', function onSuccess(loaded){ 
+    console.log(loaded.file_system);
+});</pre></code>
+            <p>Adding/Replacing a signature:</p>
+            <pre><code>var ioc = require('ioc').make();
+var deps = {
+    file_system : "[node] fs"
+}
+
+function mockNode(key, module, callback) {
+    var success = true;
+    if (success) {
+        var mock_fs = {
+            readdir : function() { console.log('mock readdir called'); }
+        };
+        callback(null, key, module);
+    } else {
+        callback(new Error('Loading failed!'));
+    }
+});
+
+ioc.attach('node', mockNode)
+   .load(deps, function onLoad(err, loaded) {
+       console.log(loaded.file_system); // Should only have "readdir" function defined
+   });</code></pre>
+
+            <!-- Github -->
+            <h2 id="github">Github</h2>
+            <hr>
+            <p>You can fork my repo on github if you want to contribute to this project:</p>
+            <p><a href="https://github.com/soggie/norris-ioc">NORRIS-IoC</a></p>
+            <p>Alternatively, look up and right. Click on that orange ribbon.</p>
+
+            <!-- License -->
+            <h2 id="license">License</h2>
+            <hr>
+            <p>NORRIS IoC is licensed under the <a href="http://en.wikipedia.org/wiki/MIT_License">MIT license</a>, which basically means you can use NORRIS IoC in any projects (both non-profit and commercial) or modify it as you see fit as long as you retain the copyright header in the source files. And no, you do not need to credit me for anything, just as long as you don't claim it as being your own.</p>
+            <pre class="license">Copyright (C) 2011 by Ruben L Z Tan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</pre>
         </div>
     </div>
+
+    <div class="footer">Copyright &copy; 2011 Ruben LZ Tan aka "roguejs"</div>
         
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
     <script src="/highlight.js"></script>
